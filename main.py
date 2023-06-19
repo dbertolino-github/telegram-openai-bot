@@ -1,5 +1,12 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from pydantic import BaseModel
+import httpx
+import os
+
+TOKEN = "5764835537:AAEVeCtTnGPtfsupAh-mJF08ajoYJY6EI2I"
+BASE_URL = f"https://api.telegram.org/bot{TOKEN}"
+
+client = httpx.AsyncClient()
 
 app = FastAPI()
 
@@ -12,16 +19,12 @@ async def root():
     return {"message": "Hello World. Welcome to FastAPI!"}
 
 
-@app.get("/path")
-async def demo_get():
-    return {"message": "This is /path endpoint, use a post request to transform the text to uppercase"}
+@app.post("/webhook/")
+async def webhook(req: Request):
+    data = await req.json()
+    chat_id = data['message']['chat']['id']
+    text = data['message']['text']
 
+    await client.get(f"{BASE_URL}/sendMessage?chat_id={chat_id}&text={text}")
 
-@app.post("/path")
-async def demo_post(inp: Msg):
-    return {"message": inp.msg.upper()}
-
-
-@app.get("/path/{path_id}")
-async def demo_get_path_id(path_id: int):
-    return {"message": f"This is /path/{path_id} endpoint, use post request to retrieve result"}
+    return data
