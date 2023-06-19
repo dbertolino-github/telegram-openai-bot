@@ -60,7 +60,7 @@ async def webhook(req: Request):
 
 @app.post("/slack")
 async def webhook(req: Request):
-
+    print(req)
     data = await req.json()
     text = data['message']['text']
     response = manage_incoming_message(text)
