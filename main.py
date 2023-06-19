@@ -10,10 +10,6 @@ client = httpx.AsyncClient()
 
 app = FastAPI()
 
-class Msg(BaseModel):
-    msg: str
-
-
 @app.get("/")
 async def root():
     return {"message": "Hello World. Welcome to FastAPI!"}
@@ -25,6 +21,10 @@ async def webhook(req: Request):
     chat_id = data['message']['chat']['id']
     text = data['message']['text']
 
-    await client.get(f"{BASE_URL}/sendMessage?chat_id={chat_id}&text={text}")
+    # TODO: chiamate a OPENAI
+
+    response = "sti cazzi non ho l'intelligenza artificiosa"
+
+    await client.get(f"{BASE_URL}/sendMessage?chat_id={chat_id}&text={response}")
 
     return data
