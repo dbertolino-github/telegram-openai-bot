@@ -24,6 +24,10 @@ def get_initial_message():
     messages=[{"role": "system", "content": constants.INIT_CHATBOT_PROMPT}]
     return messages
 
+def update_chat(messages, role, content):
+    messages.append({"role": role, "content": content})
+    return messages
+
 app = FastAPI()
 
 @app.get("/")
@@ -42,9 +46,8 @@ async def webhook(req: Request):
     if text == "/start":
         messages = get_initial_message()
         response = get_chatgpt_response(messages)
-        
     else:
-        response = get_chatgpt_response([text])
+        response = get_chatgpt_response([{"role": "user", "content": text}])
 
     await client.get(f"{BASE_URL_TELEGRAM}/sendMessage?chat_id={chat_id}&text={response}")
 
