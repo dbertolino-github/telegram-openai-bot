@@ -4,6 +4,7 @@ import httpx
 import os
 import openai
 import constants as constants
+from pydantic import BaseModel
 
 TOKEN = "5764835537:AAEVeCtTnGPtfsupAh-mJF08ajoYJY6EI2I"
 BASE_URL_TELEGRAM = f"https://api.telegram.org/bot{TOKEN}"
@@ -11,6 +12,9 @@ BASE_URL_SLACK = os.environ["BASE_URL_SLACK"]
 OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
 
 client = httpx.AsyncClient()
+
+class SlackMessage(BaseModel):
+    text: str
 
 # CUSTOM MESSAGES
 def get_chatgpt_response(messages, model="gpt-3.5-turbo"):
@@ -59,11 +63,9 @@ async def webhook(req: Request):
     return data
 
 @app.post("/slack")
-async def webhook(req: Request):
+async def webhook(req: SlackMessage):
     print(req)
-    data = await req.json()
-    text = data['message']['text']
-    response = manage_incoming_message(text)
+    response = manage_incoming_message(req.text)
+    print(response)
 
     return response['text']
-
