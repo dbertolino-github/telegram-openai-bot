@@ -40,7 +40,9 @@ async def webhook(req: Request):
     response = "SOMETHING WENT WRONG"
 
     if text == "/start":
-        response = get_initial_message()
+        messages = get_initial_message()
+        response = get_chatgpt_response(messages)
+        
     else:
         response = get_chatgpt_response([text])
 
