@@ -13,5 +13,5 @@ ARG RAILWAY_ENVIRONMENT
 ENV RAILWAY_ENVIRONMENT=production
 
 # RUN
-EXPOSE 443
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "443"]
+EXPOSE $PORT
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "$PORT"]
