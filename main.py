@@ -7,7 +7,7 @@ import constants as constants
 
 TOKEN = "5764835537:AAEVeCtTnGPtfsupAh-mJF08ajoYJY6EI2I"
 BASE_URL_TELEGRAM = f"https://api.telegram.org/bot{TOKEN}"
-BASE_URL_SLACK = "https://hooks.slack.com/services/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"
+BASE_URL_SLACK = os.environ["BASE_URL_SLACK"]
 OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
 
 client = httpx.AsyncClient()
