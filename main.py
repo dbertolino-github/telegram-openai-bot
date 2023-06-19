@@ -65,5 +65,5 @@ async def webhook(req: Request):
     text = data['message']['text']
     response = manage_incoming_message(text)
 
-    return response
+    return response[text]
 
