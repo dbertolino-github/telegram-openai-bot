@@ -122,8 +122,5 @@ async def webhook(req: Request):
 
 @app.post("/slack")
 async def webhook(req: SlackMessage):
-    print(req)
-    response = manage_incoming_message(req.text)
-    print(response)
 
-    return response['text']
+    return 'not supported'

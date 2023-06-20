@@ -51,7 +51,7 @@ class PostgreSQLClient:
         except:
             print("POSTGRES ERROR")
 
-    def get_messages(chat_id):
+    def get_messages(self, chat_id):
 
         query = f"""
                     SELECT * from {POSTGRES_TABLE_CONVERSATIONS}
