@@ -91,7 +91,7 @@ def manage_incoming_message(chat_id, text, name):
         response = get_chatgpt_response(messages)
         db_client.insert_message(chat_id, "user", text)
     
-    db_client.insert_message(chat_id, "assistant", response)
+    db_client.insert_message(chat_id, "assistant", response.replace("'", ""))
     
     if conversations:
         transcript = "" 
