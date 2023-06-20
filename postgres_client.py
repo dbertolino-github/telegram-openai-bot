@@ -36,7 +36,7 @@ class PostgreSQLClient:
 
         query = f"""
                     INSERT INTO {POSTGRES_TABLE_CONVERSATIONS}(chat_id, role, content)
-                    VALUES ({chat_id}, '{role}','{content});
+                    VALUES ({chat_id}, '{role}','{content}');
                 """
         
         self.cursor.execute(query)
