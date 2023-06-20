@@ -55,7 +55,7 @@ class PostgreSQLClient:
 
         query = f"""
                     SELECT * from {POSTGRES_TABLE_CONVERSATIONS}
-                    WHERE chat_id IS {chat_id};
+                    WHERE chat_id = {chat_id};
                 """
         try:
             self.cursor.execute(query)
