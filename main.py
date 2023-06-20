@@ -95,12 +95,11 @@ def manage_incoming_message(chat_id, text, name):
     
     if conversations:
         transcript = "" 
-        transcript = transcript+get_conversation_transcript(conversation[0][2], conversation[0][3])
+        l = len(conversations) - 3
         
-        conversations = conversations[-3:]
-        
-        for conversation in conversations:
-            transcript = transcript+get_conversation_transcript(conversation[0][2], conversation[0][3])  
+        for idx, conversation in enumerate(conversations):
+            if(idx == 0 or idx > l):
+                transcript = transcript+get_conversation_transcript(conversation[0][2], conversation[0][3])  
         report = summarize(transcript)
 
         db_client.insert_report(chat_id, report, "severity")
