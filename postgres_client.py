@@ -23,11 +23,8 @@ class PostgreSQLClient:
                     host=POSTGRES_HOST,
                     port=POSTGRES_PORT
                 )
-        
-        # Creating a cursor object
-        self.cursor = self.client.cursor()
 
-        print('CURSORS POSTGRES READY')
+        print('CLIENT POSTGRES READY')
 
         # # Register UUID for id_load
         # register_uuid()
@@ -45,11 +42,16 @@ class PostgreSQLClient:
                     INSERT INTO {POSTGRES_TABLE_CONVERSATIONS}(chat_id, role, content)
                     VALUES ({chat_id}, '{role}','{mex}');
                 """
+        # Creating a cursor object
+        cursor = self.client.cursor()
         try:
-            self.cursor.execute(query)
+            cursor.execute(query)
             self.client.commit()
         except:
             print("POSTGRES ERROR")
+        finally:
+            # Close the cursor
+            cursor.close()
 
     def get_messages(self, chat_id):
 
@@ -58,11 +60,17 @@ class PostgreSQLClient:
                     WHERE chat_id = {chat_id};
                 """
         messages = None
+        
+        # Creating a cursor object
+        cursor = self.client.cursor()
         try:
-            self.cursor.execute(query)
+            cursor.execute(query)
             messages = self.cursor.fetchall()
         except:
             print("POSTGRES ERROR")
+        finally:
+            # Close the cursor
+            cursor.close()
 
         return messages
 
