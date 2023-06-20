@@ -37,7 +37,7 @@ def manage_incoming_message(chat_id, text):
 
     response = "SOMETHING_WENT_WRONG"
     if text == "/start":
-        messages = get_initial_message()
+        messages = get_initial_message(chat_id)
         response = get_chatgpt_response(messages)
         db_client.insert_message(chat_id, "system", response)
     else:
