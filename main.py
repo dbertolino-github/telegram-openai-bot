@@ -7,6 +7,7 @@ import constants as constants
 from pydantic import BaseModel
 from postgres_client import PostgreSQLClient
 import urllib
+from unidecode import unidecode
 
 TOKEN = os.environ["TELEGRAM_TOKEN"]
 BASE_URL_TELEGRAM = f"https://api.telegram.org/bot{TOKEN}"
@@ -68,7 +69,7 @@ async def webhook(req: Request):
     text = data['message']['text']
     name = data['message']['from']['first_name']
     response = manage_incoming_message(chat_id, text, name)
-
+    response = unidecode(response)
     url = f"{BASE_URL_TELEGRAM}/sendMessage?chat_id={chat_id}&text={response}"
     # url = urllib.parse.quote(url.encode('utf8'), ':/')
     await client.get(url)
