@@ -34,9 +34,15 @@ class PostgreSQLClient:
 
     def insert_message(self, chat_id, role, content):
 
+        mex = str(content)
+        mex = mex.replace("\\", "\\\\")
+        mex = mex.replace("'", "\\'")
+        mex = mex.replace("\n", " ")
+        mex = mex.replace(";", "")
+
         query = f"""
                     INSERT INTO {POSTGRES_TABLE_CONVERSATIONS}(chat_id, role, content)
-                    VALUES ({chat_id}, '{role}','{content}');
+                    VALUES ({chat_id}, '{role}','{mex}');
                 """
         try:
             self.cursor.execute(query)
