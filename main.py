@@ -99,7 +99,7 @@ def manage_incoming_message(chat_id, text, name):
         
         for idx, conversation in enumerate(conversations):
             if(idx == 0 or idx > l):
-                transcript = transcript+get_conversation_transcript(conversation[0][2], conversation[0][3])  
+                transcript = transcript+get_conversation_transcript(conversation[2], conversation[3])  
         report = summarize(transcript)
 
         db_client.insert_report(chat_id, report, "severity")
