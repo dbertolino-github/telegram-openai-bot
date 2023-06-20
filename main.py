@@ -23,7 +23,8 @@ def get_chatgpt_response(messages, model="gpt-3.5-turbo"):
     try :
         response = openai.ChatCompletion.create(
             model=model,
-            messages=messages)
+            messages=messages,
+            max_tokens=200)
     except :
         print("ERRORE OPENAI")
 
