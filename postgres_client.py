@@ -76,7 +76,7 @@ class PostgreSQLClient:
         # mex = unidecode(mex)
 
         query = f"""
-                    INSERT INTO {POSTGRES_TABLE_CONVERSATIONS}(chat_id, content, severity)
+                    INSERT INTO {POSTGRES_TABLE_REPORTS}(chat_id, content, severity)
                     VALUES ({chat_id}, '{content}','{severity}');
                 """
         try:
