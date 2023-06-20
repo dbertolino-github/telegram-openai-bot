@@ -35,7 +35,7 @@ def get_initial_message(chat_id):
     db_client.insert_message(chat_id, "system", constants.INIT_CHATBOT_PROMPT)
     return messages
 
-def manage_incoming_message(chat_id, text):
+def manage_incoming_message(chat_id, text, name):
 
     response = "SOMETHING_WENT_WRONG"
     if text == "/start":
@@ -64,9 +64,8 @@ async def webhook(req: Request):
     data = await req.json()
     chat_id = data['message']['chat']['id']
     text = data['message']['text']
-    username = data['message']['from']
-    print(username)
-    response = manage_incoming_message(chat_id, text)
+    name = data['message']['from']['first_name']
+    response = manage_incoming_message(chat_id, text, name)
 
     url = f"{BASE_URL_TELEGRAM}/sendMessage?chat_id={chat_id}&text={response}"
     url = urllib.parse.quote(url.encode('utf8'), ':/')
