@@ -57,7 +57,8 @@ class PostgreSQLClient:
 
         query = f"""
                     SELECT * from {POSTGRES_TABLE_CONVERSATIONS}
-                    WHERE chat_id = {chat_id};
+                    WHERE chat_id = {chat_id}
+                    ORDER BY created_at DESC;
                 """
         messages = None
         

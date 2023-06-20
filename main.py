@@ -20,6 +20,17 @@ client = httpx.AsyncClient()
 class SlackMessage(BaseModel):
     text: str
 
+def from_tuple_to_gpt_input(tuples): 
+    list = []
+    for t in tuples : 
+        obj = {
+            "role" : t[3],
+            "content" : t[2]
+        }
+        list.append(obj)
+        
+    return list
+
 # CUSTOM MESSAGES
 def get_chatgpt_response(messages, model="gpt-3.5-turbo"):
     response = None
@@ -62,30 +73,33 @@ def get_initial_message(chat_id, name):
     message = constants.INIT_CHATBOT_PROMPT.format(name)
     messages=[{"role": "system", "content": message}]
     db_client.insert_message(chat_id, "system", message)
-    print(message)
     return messages
 
 def manage_incoming_message(chat_id, text, name):
 
     response = "SOMETHING_WENT_WRONG"
+    conversations = None
+
     if text == "/start":
         messages = get_initial_message(chat_id, name)
         response = get_chatgpt_response(messages)
         db_client.insert_message(chat_id, "system", response)
     else:
-        response = get_chatgpt_response([{"role": "user", "content": text}])
-
-    db_client.insert_message(chat_id, "user", text)
+        conversations = db_client.get_messages(chat_id)
+        messages = from_tuple_to_gpt_input(conversations)
+        messages.append({"role": "user", "content": text})
+        response = get_chatgpt_response(messages)
+        db_client.insert_message(chat_id, "user", text)
+    
     db_client.insert_message(chat_id, "assistant", response)
-
-    conversations = db_client.get_messages(chat_id)
-    transcript = ""
-    if conversations: 
+    
+    if conversations:
+        transcript = "" 
         for conversation in conversations:
             transcript = transcript+get_conversation_transcript(conversation[2], conversation[3])
         report = summarize(transcript)
 
-    db_client.insert_report(chat_id, report, "severity")
+        db_client.insert_report(chat_id, report, "severity")
 
     return response
 
