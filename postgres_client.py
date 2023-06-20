@@ -2,6 +2,7 @@ import pandas as pd
 import os
 import psycopg2
 from datetime import datetime
+from unidecode import unidecode
 
 
 POSTGRES_HOST = os.getenv("POSTGRES_HOST","")
@@ -39,6 +40,7 @@ class PostgreSQLClient:
         mex = mex.replace("'", "\\'")
         mex = mex.replace("\n", " ")
         mex = mex.replace(";", "")
+        mex = unidecode(mex)
 
         query = f"""
                     INSERT INTO {POSTGRES_TABLE_CONVERSATIONS}(chat_id, role, content)

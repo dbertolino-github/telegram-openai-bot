@@ -21,3 +21,4 @@ pandas
 xlrd
 openpyxl
 psycopg2
+unicode
