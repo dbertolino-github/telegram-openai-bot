@@ -59,9 +59,13 @@ class PostgreSQLClient:
                 """
         try:
             self.cursor.execute(query)
-            return self.cursor.fetchall()
-        except:
+            messages = self.cursor.fetchall()
+            print(messages)
+        except Exception as err:
+            print(err)
             print("POSTGRES ERROR")
+
+        return messages
 
     def insert_report(self, chat_id, content, severity):
 
