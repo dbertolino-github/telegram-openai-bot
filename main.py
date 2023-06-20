@@ -53,6 +53,18 @@ def manage_incoming_message(chat_id, text, name):
 
     return response
 
+# build a table mapping all non-printable characters to None
+NOPRINT_TRANS_TABLE = {
+    i: None for i in range(0, sys.maxunicode + 1) if not chr(i).isprintable()
+}
+
+def make_printable(s):
+    """Replace non-printable characters in a string."""
+
+    # the translate method on str removes characters
+    # that map to None from the string
+    return s.translate(NOPRINT_TRANS_TABLE)
+
 db_client = PostgreSQLClient()
 app = FastAPI()
 
@@ -69,7 +81,7 @@ async def webhook(req: Request):
     text = data['message']['text']
     name = data['message']['from']['first_name']
     response = manage_incoming_message(chat_id, text, name)
-    response = unidecode(response)
+    response = make_printable(response)
     url = f"{BASE_URL_TELEGRAM}/sendMessage?chat_id={chat_id}&text={response}"
     # url = urllib.parse.quote(url.encode('utf8'), ':/')
     await client.get(url)
