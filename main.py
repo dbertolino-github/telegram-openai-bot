@@ -6,6 +6,7 @@ import openai
 import constants as constants
 from pydantic import BaseModel
 from postgres_client import PostgreSQLClient
+import urllib
 
 TOKEN = os.environ["TELEGRAM_TOKEN"]
 BASE_URL_TELEGRAM = f"https://api.telegram.org/bot{TOKEN}"
@@ -64,7 +65,9 @@ async def webhook(req: Request):
     text = data['message']['text']
     response = manage_incoming_message(chat_id, text)
 
-    await client.get(f"{BASE_URL_TELEGRAM}/sendMessage?chat_id={chat_id}&text={response}")
+    url = f"{BASE_URL_TELEGRAM}/sendMessage?chat_id={chat_id}&text={response}"
+    url = urllib.parse.quote(url.encode('utf8'), ':/')
+    await client.get(url)
 
     return data
 
