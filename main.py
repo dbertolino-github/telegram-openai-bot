@@ -31,6 +31,30 @@ def get_chatgpt_response(messages, model="gpt-3.5-turbo"):
 
     return response['choices'][0]['message']['content']
 
+def summarize(conversation, model="text-davinci-003"):
+    final_conversation = ' '.join(conversation)
+    augmented_prompt = constants.SUMMARY_PROMPT.format(final_conversation)
+    try:
+        summary = openai.Completion.create(
+            model="text-davinci-003",
+            prompt=augmented_prompt,
+            temperature=.5,
+            max_tokens=500,
+        )["choices"][0]["text"]
+    catch:
+        print("ERRORE OPENAI")
+
+    return summary
+
+ def get_conversation_transcript(conversation, role):
+    user_name = ""
+    if role == "assistant":
+        user_name = "Alf"
+    else:
+        user_name = "Il dipendente"
+    conversation_text = f"{user_name}: {conversation}"
+    return conversation_text
+
 def get_initial_message(chat_id, name):
     message = constants.INIT_CHATBOT_PROMPT.format(name)
     messages=[{"role": "system", "content": message}]
@@ -47,9 +71,17 @@ def manage_incoming_message(chat_id, text, name):
         db_client.insert_message(chat_id, "system", response)
     else:
         response = get_chatgpt_response([{"role": "user", "content": text}])
-    
+
     db_client.insert_message(chat_id, "user", text)
     db_client.insert_message(chat_id, "assistant", response)
+
+    conversations = db_client.get_messages(chat_id)
+    transcript = ""
+    for conversation in conversations:
+        transcript = transcript+get_conversation_transcript(conversation.content, conversation.role)
+    report = summarize(transcript)
+
+    db_client.insert_report(chat_id, report, "severity")
 
     return response
 

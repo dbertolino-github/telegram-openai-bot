@@ -51,6 +51,39 @@ class PostgreSQLClient:
         except:
             print("POSTGRES ERROR")
 
+    def get_messages(chat_id):
+
+        query = f"""
+                    SELECT * from {POSTGRES_TABLE_CONVERSATIONS}
+                    WHERE chat_id IS {chat_id};
+                """
+        try:
+            self.cursor.execute(query)
+            return self.cursor.fetchall()
+        except:
+            print("POSTGRES ERROR")
+
+    def insert_report(self, chat_id, content, severity):
+
+        mex = str(content)
+        mex = mex.replace("\\", "\\\\")
+        mex = mex.replace("\'", "")
+        mex = mex.replace("\n", " ")
+        mex = mex.replace(";", "")
+        # mex = unidecode(mex)
+
+        query = f"""
+                    INSERT INTO {POSTGRES_TABLE_CONVERSATIONS}(chat_id, content, severity)
+                    VALUES ({chat_id}, '{content}','{severity}');
+                """
+        try:
+            self.cursor.execute(query)
+            self.client.commit()
+        except:
+            print("POSTGRES ERROR")
+
+        
+
     # def retrieve_messages(self, chat_id):
 
     #     query = f"""
