@@ -68,7 +68,7 @@ async def webhook(req: Request):
     response = manage_incoming_message(chat_id, text, name)
 
     url = f"{BASE_URL_TELEGRAM}/sendMessage?chat_id={chat_id}&text={response}"
-    url = urllib.parse.quote(url.encode('utf8'), ':/')
+    # url = urllib.parse.quote(url.encode('utf8'), ':/')
     await client.get(url)
 
     return data
