@@ -57,12 +57,11 @@ class PostgreSQLClient:
                     SELECT * from {POSTGRES_TABLE_CONVERSATIONS}
                     WHERE chat_id = {chat_id};
                 """
+        messages = None
         try:
             self.cursor.execute(query)
             messages = self.cursor.fetchall()
-            print(messages)
-        except Exception as err:
-            print(err)
+        except:
             print("POSTGRES ERROR")
 
         return messages

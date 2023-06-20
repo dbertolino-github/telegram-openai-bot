@@ -22,6 +22,7 @@ class SlackMessage(BaseModel):
 
 # CUSTOM MESSAGES
 def get_chatgpt_response(messages, model="gpt-3.5-turbo"):
+    response = None
     try :
         response = openai.ChatCompletion.create(
             model=model,
@@ -34,6 +35,7 @@ def get_chatgpt_response(messages, model="gpt-3.5-turbo"):
 def summarize(conversation, model="text-davinci-003"):
     final_conversation = ' '.join(conversation)
     augmented_prompt = constants.SUMMARY_PROMPT.format(final_conversation)
+    summary = None
     try:
         summary = openai.Completion.create(
             model="text-davinci-003",
