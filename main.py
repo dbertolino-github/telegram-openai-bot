@@ -30,8 +30,8 @@ def get_chatgpt_response(messages, model="gpt-3.5-turbo"):
 
     return response['choices'][0]['message']['content']
 
-def get_initial_message(chat_id):
-    messages=[{"role": "system", "content": constants.INIT_CHATBOT_PROMPT}]
+def get_initial_message(chat_id, name):
+    messages=[{"role": "system", "content": constants.INIT_CHATBOT_PROMPT.format(name)}]
     db_client.insert_message(chat_id, "system", constants.INIT_CHATBOT_PROMPT)
     return messages
 
@@ -39,7 +39,7 @@ def manage_incoming_message(chat_id, text, name):
 
     response = "SOMETHING_WENT_WRONG"
     if text == "/start":
-        messages = get_initial_message(chat_id)
+        messages = get_initial_message(chat_id, name)
         response = get_chatgpt_response(messages)
         db_client.insert_message(chat_id, "system", response)
     else:
