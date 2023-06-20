@@ -102,7 +102,7 @@ def manage_incoming_message(chat_id, text, name):
                 transcript = transcript+get_conversation_transcript(conversation[2], conversation[3])  
         report = summarize(transcript)
 
-        db_client.insert_report(chat_id, report.replace("'", ""), report[-6:].replace(' ', '').replace('.', ''))
+        db_client.insert_report(chat_id, report.replace("'", ""), report[-6:].replace(' ', '').replace('.', '').replace(':', ''))
 
     return response
 
