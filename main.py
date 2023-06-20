@@ -5,7 +5,7 @@ import os
 import openai
 import constants as constants
 from pydantic import BaseModel
-from postgresql_client import PostgreSQLClient
+from postgres_client import PostgreSQLClient
 
 TOKEN = "5764835537:AAEVeCtTnGPtfsupAh-mJF08ajoYJY6EI2I"
 BASE_URL_TELEGRAM = f"https://api.telegram.org/bot{TOKEN}"
