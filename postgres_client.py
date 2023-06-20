@@ -67,7 +67,7 @@ class PostgreSQLClient:
         cursor = self.client.cursor()
         try:
             cursor.execute(query)
-            messages = self.cursor.fetchall()
+            messages = cursor.fetchall()
         except Exception as e: 
             print(e)
             print("POSTGRES ERROR")
@@ -90,21 +90,15 @@ class PostgreSQLClient:
                     INSERT INTO {POSTGRES_TABLE_REPORTS}(chat_id, content, severity)
                     VALUES ({chat_id}, '{content}','{severity}');
                 """
+        
+        # Creating a cursor object
+        cursor = self.client.cursor()
         try:
-            self.cursor.execute(query)
+            cursor.execute(query)
             self.client.commit()
         except Exception as e: 
             print(e)
             print("POSTGRES ERROR")
-
-        
-
-    # def retrieve_messages(self, chat_id):
-
-    #     query = f"""
-    #                 SELECT chat_id,  {POSTGRES_TABLE_CONVERSATIONS}
-    #                 VALUES ('{chat_id}', '{role}','{content}';
-    #             """
-        
-    #     self.cursor.execute(query)
-    #     self.client.commit()
+        finally:
+            # Close the cursor
+            cursor.close()
