@@ -73,7 +73,6 @@ def get_conversation_transcript(conversation, role):
 def get_initial_message(chat_id, name):
     message = constants.INIT_CHATBOT_PROMPT.format(name)
     messages=[{"role": "system", "content": message}]
-    db_client.insert_message(chat_id, "system", message)
     return messages
 
 def manage_incoming_message(chat_id, text, name):
