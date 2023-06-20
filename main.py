@@ -8,6 +8,7 @@ from pydantic import BaseModel
 from postgres_client import PostgreSQLClient
 import urllib
 from unidecode import unidecode
+import sys
 
 TOKEN = os.environ["TELEGRAM_TOKEN"]
 BASE_URL_TELEGRAM = f"https://api.telegram.org/bot{TOKEN}"
@@ -24,8 +25,7 @@ def get_chatgpt_response(messages, model="gpt-3.5-turbo"):
     try :
         response = openai.ChatCompletion.create(
             model=model,
-            messages=messages,
-            max_tokens=200)
+            messages=messages)
     except :
         print("ERRORE OPENAI")
 
