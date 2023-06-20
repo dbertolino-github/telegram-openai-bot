@@ -41,7 +41,7 @@ def summarize(conversation, model="text-davinci-003"):
             temperature=.5,
             max_tokens=500,
         )["choices"][0]["text"]
-    catch:
+    except:
         print("ERRORE OPENAI")
 
     return summary
