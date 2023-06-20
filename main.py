@@ -64,7 +64,7 @@ async def webhook(req: Request):
     data = await req.json()
     chat_id = data['message']['chat']['id']
     text = data['message']['text']
-    username = data['message']['from']['username']
+    username = data['message']['from']
     print(username)
     response = manage_incoming_message(chat_id, text)
 
