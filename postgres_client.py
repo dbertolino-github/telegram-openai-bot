@@ -33,7 +33,7 @@ class PostgreSQLClient:
 
         mex = str(content)
         mex = mex.replace("\\", "\\\\")
-        mex = mex.replace("\'", "")
+        mex = mex.replace("'", "")
         mex = mex.replace("\n", " ")
         mex = mex.replace(";", "")
         # mex = unidecode(mex)
@@ -81,7 +81,7 @@ class PostgreSQLClient:
 
         mex = str(content)
         mex = mex.replace("\\", "\\\\")
-        mex = mex.replace("\'", "")
+        mex = mex.replace("'", "")
         mex = mex.replace("\n", " ")
         mex = mex.replace(";", "")
         # mex = unidecode(mex)
