@@ -63,6 +63,8 @@ async def webhook(req: Request):
     data = await req.json()
     chat_id = data['message']['chat']['id']
     text = data['message']['text']
+    username = data['message']['user']['username']
+    print(username)
     response = manage_incoming_message(chat_id, text)
 
     url = f"{BASE_URL_TELEGRAM}/sendMessage?chat_id={chat_id}&text={response}"
