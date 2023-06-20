@@ -21,4 +21,4 @@ pandas
 xlrd
 openpyxl
 psycopg2
-unicode
+unidecode==1.3.6
