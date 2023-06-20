@@ -5,6 +5,7 @@ import os
 import openai
 import constants as constants
 from pydantic import BaseModel
+from postgresql_client import PostgreSQLClient
 
 TOKEN = "5764835537:AAEVeCtTnGPtfsupAh-mJF08ajoYJY6EI2I"
 BASE_URL_TELEGRAM = f"https://api.telegram.org/bot{TOKEN}"
@@ -24,15 +25,16 @@ def get_chatgpt_response(messages, model="gpt-3.5-turbo"):
 
     return response['choices'][0]['message']['content']
 
-def get_initial_message():
+def get_initial_message(chat_id):
     messages=[{"role": "system", "content": constants.INIT_CHATBOT_PROMPT}]
+    db_client.insert_message(chat_id, "system", constants.INIT_CHATBOT_PROMPT)
     return messages
 
 def update_chat(messages, role, content):
     messages.append({"role": role, "content": content})
     return messages
 
-def manage_incoming_message(text):
+def manage_incoming_message(chat_id, text):
 
     response = "SOMETHING_WENT_WRONG"
     if text == "/start":
@@ -40,9 +42,13 @@ def manage_incoming_message(text):
         response = get_chatgpt_response(messages)
     else:
         response = get_chatgpt_response([{"role": "user", "content": text}])
+    
+    db_client.insert_message(chat_id, "user", text)
+    db_client.insert_message(chat_id, "assistant", response)
 
     return response
 
+db_client = PostgreSQLClient()
 app = FastAPI()
 
 @app.get("/")
@@ -56,7 +62,7 @@ async def webhook(req: Request):
     data = await req.json()
     chat_id = data['message']['chat']['id']
     text = data['message']['text']
-    response = manage_incoming_message(text)
+    response = manage_incoming_message(chat_id, text)
 
     await client.get(f"{BASE_URL_TELEGRAM}/sendMessage?chat_id={chat_id}&text={response}")
 

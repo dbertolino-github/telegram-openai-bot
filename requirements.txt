@@ -17,3 +17,7 @@ watchfiles==0.18.1
 websockets==10.4
 httpx==0.24.1
 openai==0.27.8
+pandas
+xlrd
+openpyxl
+psycopg2
