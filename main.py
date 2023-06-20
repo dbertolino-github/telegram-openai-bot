@@ -73,6 +73,7 @@ def get_conversation_transcript(conversation, role):
 def get_initial_message(chat_id, name):
     message = constants.INIT_CHATBOT_PROMPT.format(name)
     messages=[{"role": "system", "content": message}]
+    db_client.insert_message(chat_id, "system", message)
     return messages
 
 def manage_incoming_message(chat_id, text, name):
@@ -83,7 +84,6 @@ def manage_incoming_message(chat_id, text, name):
     if text == "/start":
         messages = get_initial_message(chat_id, name)
         response = get_chatgpt_response(messages)
-        db_client.insert_message(chat_id, "system", response)
     else:
         conversations = db_client.get_messages(chat_id)
         messages = from_tuple_to_gpt_input(conversations)
