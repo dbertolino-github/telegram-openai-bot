@@ -47,7 +47,8 @@ class PostgreSQLClient:
         try:
             cursor.execute(query)
             self.client.commit()
-        except:
+        except Exception as e: 
+            print(e)
             print("POSTGRES ERROR")
         finally:
             # Close the cursor
@@ -67,7 +68,8 @@ class PostgreSQLClient:
         try:
             cursor.execute(query)
             messages = self.cursor.fetchall()
-        except:
+        except Exception as e: 
+            print(e)
             print("POSTGRES ERROR")
         finally:
             # Close the cursor
@@ -91,7 +93,8 @@ class PostgreSQLClient:
         try:
             self.cursor.execute(query)
             self.client.commit()
-        except:
+        except Exception as e: 
+            print(e)
             print("POSTGRES ERROR")
 
         
