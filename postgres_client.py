@@ -10,6 +10,7 @@ POSTGRES_TABLE_CONVERSATIONS =  os.getenv("POSTGRES_TABLE_CONVERSATIONS","")
 POSTGRES_TABLE_REPORTS = os.getenv("POSTGRES_TABLE_REPORTS","")
 POSTGRES_USERNAME = os.getenv("POSTGRES_USERNAME","")
 POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD","")
+POSTGRES_PORT = os.getenv("POSTGRES_PORT","")
 
 class PostgreSQLClient:
 
@@ -20,11 +21,13 @@ class PostgreSQLClient:
                     user=POSTGRES_USERNAME,
                     password=POSTGRES_PASSWORD,
                     host=POSTGRES_HOST,
-                    port='5432'
+                    port=POSTGRES_PORT
                 )
         
         # Creating a cursor object
         self.cursor = self.client.cursor()
+
+        print('CURSORS POSTGRES READY')
 
         # # Register UUID for id_load
         # register_uuid()
