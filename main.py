@@ -129,17 +129,26 @@ async def root():
 @app.post("/telegram")
 async def webhook(req: Request):
 
-    data = await req.json()
-    chat_id = data['message']['chat']['id']
-    text = data['message']['text']
-    name = data['message']['from']['first_name']
-    response = manage_incoming_message(chat_id, text, name)
-    response = make_printable(response)
-    url = f"{BASE_URL_TELEGRAM}/sendMessage?chat_id={chat_id}&text={response}"
-    # url = urllib.parse.quote(url.encode('utf8'), ':/')
-    await client.get(url)
+    try : 
+        data = await req.json()
+        chat_id = data['message']['chat']['id']
+        text = data['message']['text']
+        name = data['message']['from']['first_name']
+        response = manage_incoming_message(chat_id, text, name)
+        response = make_printable(response)
+        url = f"{BASE_URL_TELEGRAM}/sendMessage?chat_id={chat_id}&text={response}"
+        # url = urllib.parse.quote(url.encode('utf8'), ':/')
+        await client.get(url)
+    
+    except Exception as e: 
+        print(e)
+        response = "SERVER ERROR"
+        url = f"{BASE_URL_TELEGRAM}/sendMessage?chat_id={chat_id}&text={response}"
+        await client.get(url)
 
     return data
+
+    
 
 @app.post("/slack")
 async def webhook(req: SlackMessage):
