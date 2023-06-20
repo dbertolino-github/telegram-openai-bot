@@ -38,9 +38,11 @@ class PostgreSQLClient:
                     INSERT INTO {POSTGRES_TABLE_CONVERSATIONS}(chat_id, role, content)
                     VALUES ({chat_id}, '{role}','{content}');
                 """
-        
-        self.cursor.execute(query)
-        self.client.commit()
+        try:
+            self.cursor.execute(query)
+            self.client.commit()
+        except:
+            print("POSTGRES ERROR")
 
     # def retrieve_messages(self, chat_id):
 

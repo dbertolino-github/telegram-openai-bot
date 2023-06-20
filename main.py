@@ -19,9 +19,12 @@ class SlackMessage(BaseModel):
 
 # CUSTOM MESSAGES
 def get_chatgpt_response(messages, model="gpt-3.5-turbo"):
-    response = openai.ChatCompletion.create(
-        model=model,
-        messages=messages)
+    try :
+        response = openai.ChatCompletion.create(
+            model=model,
+            messages=messages)
+    except :
+        print("ERRORE OPENAI")
 
     return response['choices'][0]['message']['content']
 
@@ -30,16 +33,13 @@ def get_initial_message(chat_id):
     db_client.insert_message(chat_id, "system", constants.INIT_CHATBOT_PROMPT)
     return messages
 
-def update_chat(messages, role, content):
-    messages.append({"role": role, "content": content})
-    return messages
-
 def manage_incoming_message(chat_id, text):
 
     response = "SOMETHING_WENT_WRONG"
     if text == "/start":
         messages = get_initial_message()
         response = get_chatgpt_response(messages)
+        db_client.insert_message(chat_id, "system", response)
     else:
         response = get_chatgpt_response([{"role": "user", "content": text}])
     
