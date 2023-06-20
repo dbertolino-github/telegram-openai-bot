@@ -46,7 +46,7 @@ def summarize(conversation, model="text-davinci-003"):
 
     return summary
 
- def get_conversation_transcript(conversation, role):
+def get_conversation_transcript(conversation, role):
     user_name = ""
     if role == "assistant":
         user_name = "Alf"
