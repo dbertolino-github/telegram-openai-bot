@@ -78,7 +78,7 @@ def manage_incoming_message(chat_id, text, name):
     conversations = db_client.get_messages(chat_id)
     transcript = ""
     for conversation in conversations:
-        transcript = transcript+get_conversation_transcript(conversation.content, conversation.role)
+        transcript = transcript+get_conversation_transcript(conversation[2], conversation[3])
     report = summarize(transcript)
 
     db_client.insert_report(chat_id, report, "severity")
