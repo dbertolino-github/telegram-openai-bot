@@ -26,7 +26,8 @@ def get_chatgpt_response(messages, model="gpt-3.5-turbo"):
     try :
         response = openai.ChatCompletion.create(
             model=model,
-            messages=messages)
+            messages=messages,
+            max_tokens=500)
     except :
         print("ERRORE OPENAI")
 
@@ -79,9 +80,10 @@ def manage_incoming_message(chat_id, text, name):
 
     conversations = db_client.get_messages(chat_id)
     transcript = ""
-    for conversation in conversations:
-        transcript = transcript+get_conversation_transcript(conversation[2], conversation[3])
-    report = summarize(transcript)
+    if conversations: 
+        for conversation in conversations:
+            transcript = transcript+get_conversation_transcript(conversation[2], conversation[3])
+        report = summarize(transcript)
 
     db_client.insert_report(chat_id, report, "severity")
 
