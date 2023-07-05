@@ -28,7 +28,9 @@ docker-compose -f docs/docker-compose.yml up
 # open browser at localhost:9001
 ```
 
-## Telegram
+# Telegram
+
+## How to create a bot
 
 **Step 1.** Enter @Botfather in the search tab and choose this bot.
 ![img1](assets/img1.webp)
@@ -42,5 +44,14 @@ In response, you receive a list of commands to manage bots.
 ![img4](assets/img4.webp)
 After you choose a suitable name for your bot — the bot is created. You will receive a message with a link to your bot t.me/<bot_username>, recommendations to set up a profile picture, description, and a list of commands to manage your new bot.
 
-To connect a bot to SendPulse you need a token. Copy your token value and find more information about connecting your bot to SendPulse in the last section of this article.
+To connect a bot you need a token. Copy your token value and find more information about connecting your bot in the next steps.
 ![img5](assets/img5.webp)
+
+## How to connect your bot
+
+You can set up your webhook connection by calling this API pasting your bot token and setting the url of your server
+
+```BASH
+curl --request GET \
+  --url 'https://api.telegram.org/<token>/setWebhook?url=<url>/telegram'
+```
