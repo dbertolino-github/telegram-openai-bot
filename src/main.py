@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request, HTTPException
 import httpx
 import os
-from postgres_client import PostgreSQLClient
+from db.PostgresClient import PostgreSQLClient
 import sys
 from chatgpt.ChatGptManager import ChatGptManager
 
