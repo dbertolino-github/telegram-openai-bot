@@ -113,7 +113,7 @@ class ChatGptManager():
 
         return message_text
 
-    def get_conversation_transcript(self, conversation, username, botname, role_index, context_index):
+    def get_conversation_transcript(self, conversation, username, botname, role_index, context_index, num_messages):
         """
         Helper method to generate a string containing an entire conversation, from a tuple input
         This can be used to create a correct input for the summerize function
@@ -128,7 +128,7 @@ class ChatGptManager():
         :rtype: str
         """
         transcript = "" 
-        l = len(conversation) - 3
+        l = len(conversation) - num_messages
 
         for idx, message in enumerate(conversation):
             if(idx == 0 or idx > l):

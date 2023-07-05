@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request, HTTPException
 import httpx
 import os
-from postgres_client import PostgreSQLClient
+from db.PostgresClient import PostgreSQLClient
 import sys
 from chatgpt.ChatGptManager import ChatGptManager
 
@@ -46,7 +46,7 @@ def generate_conversation_report(chat_id, username, botname):
     conversation = db_client.get_messages(chat_id)
 
     if conversation:
-        transcript = chatgpt_manager.get_conversation_transcript(conversation, username, botname, role_index=3, context_index=2)
+        transcript = chatgpt_manager.get_conversation_transcript(conversation, username, botname, role_index=3, context_index=2, num_messages=5)
         report = chatgpt_manager.summarize(transcript)
 
         db_client.insert_report(chat_id, report.replace("'", ""), report[-6:].replace(' ', '').replace('.', '').replace(':', ''))
