@@ -1,32 +1,49 @@
-# How to
-
-
-# Docs
-
+## Build and Run
 ```
-# to fix generated file for editing do sudo chmod -R 777 docs/*
+# Create .env file and populate manually missing information, e.g tokens for telegram and OpenAI communications
+cp .env.example .env 
 
-docker-compose -f docs/docker-compose.yml build
+# Build Docker Images
+docker-compose build
 
-# clean
-# sudo rm -rd docs/build
+# Generate python documentation for sphinx server locally, you must do it to wake up the entire docker-compose
+docker-compose run openai-bot-sphinx sphinx-apidoc -o source/code ../src
+docker-compose run openai-bot-sphinx make html
 
-# generate terraform doc
-# sudo rm infrastructure/terraform/backend/DOC-Terraform.md
-# sudo rm infrastructure/terraform/frontend/DOC-Terraform.md
-docker-compose -f docs/docker-compose.yml run sphinx terraform-docs markdown table --output-file DOC-Terraform.md --output-mode inject ../infrastructure/terraform/frontend/
-docker-compose -f docs/docker-compose.yml run sphinx terraform-docs markdown table --output-file DOC-Terraform.md --output-mode inject ../infrastructure/terraform/backend/
+# Wake up all services
+docker-compose up
+```
 
-# generate backend code doc
-# sudo rm -rf docs/source/code
-docker-compose -f docs/docker-compose.yml run sphinx sphinx-apidoc -o source/code ../backend
+## Database
+To explore database using pgadmin visit http://localhost:8050 and login using admin@mail.com admin credentials
+Register a server connection to the database using these informations:
+```
+host --> openai-bot-database
+port --> 5432
+db --> default
+username --> admin
+psw --> s3cr3t
+```
 
-# generate db doc
-# sudo rm -rf docs/source/_static/db.png
-docker-compose -f docs/docker-compose.yml run sphinx ../backend/manage.py graph_models --pydot -a -g -o source/_static/db.png
+## Docs
+Visit http://localhost:9001 to have a local view of Sphinx documentation after waking up docker compose services.
+If you have already generated teh Docs and want to re-create it, follow these steps:
+```
+# to clean
+sudo rm -rd docs/build
+sudo rm -rf docs/source/code
 
-# generate statics and run server
-docker-compose -f docs/docker-compose.yml run sphinx make html
-docker-compose -f docs/docker-compose.yml up
-# open browser at localhost:9001
+# OR to fix generated file for editing 
+sudo chmod -R 777 docs/*
+```
+
+To generate the Python Docs:
+```
+docker-compose run openai-bot-sphinx sphinx-apidoc -o source/code ../src
+docker-compose run openai-bot-sphinx make html 
+```
+
+Wakeup all services
+```
+docker-compose up
 ```

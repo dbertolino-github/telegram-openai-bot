@@ -1,6 +1,9 @@
+#: It contains the initial prompt to set up a conversation with ChatGPT
 INIT_CHATBOT_PROMPT = """
     [PROMPT PER INIZIALIZZARE IL COMPORTAMENTO DEL BOT, e.g. Stai impersonando un giornalista che chiede informazioni riguardo un avvenimento... Io sono una persona di nome {}]
     """ 
+
+#: It contains the summary prompt for ChatGPT, in other words the rules that ChatGPT must follow while gnerating a report
 SUMMARY_PROMPT = """
     Data la seguente conversazione: {} 
     Genera un riassunto di massimo 300 caratteri con i principali punti affrontati sui principali argomenti discussi.
