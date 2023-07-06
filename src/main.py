@@ -1,9 +1,9 @@
 from fastapi import FastAPI, Request, HTTPException
 import httpx
 import os
-from db.PostgresClient import PostgreSQLClient
+from postgres_sql_client import PostgreSQLClient
 import sys
-from chatgpt.ChatGptManager import ChatGptManager
+from chatgpt_manager import ChatGptManager
 
 # Retrieve environment variables
 TOKEN = os.environ["TELEGRAM_TOKEN"]
@@ -29,7 +29,14 @@ app = FastAPI()
 
 # Server Utils Functions
 def manage_incoming_message(chat_id, text, name):
-
+    """
+    Helper method to manage an incoming message to the server
+    
+    :text: content of the message
+    :text: name of the user who wrote the message
+    :return: a response computed using the chatgpt manager
+    :rtype: str
+    """
     response = "SOMETHING_WENT_WRONG"
     conversations = None
 
@@ -49,7 +56,16 @@ def manage_incoming_message(chat_id, text, name):
     return response
 
 def generate_conversation_report(chat_id, username, botname):
+    """
+    Helper method to generate and save on database a summary of coversation
+    
+    :chat_id: id of the conversation to summarize
+    :username: name to give to the user into the summary
+    :botname: name to give to the assistant into the summary
 
+    :return: nothing
+    :rtype: None
+    """
     conversation = db_client.get_messages(chat_id)
 
     if conversation:
@@ -59,20 +75,37 @@ def generate_conversation_report(chat_id, username, botname):
         db_client.insert_report(chat_id, report.replace("'", ""), report[-6:].replace(' ', '').replace('.', '').replace(':', ''))
 
 def make_printable(s):
-    """Replace non-printable characters in a string."""
+    """
+    Replace non-printable characters in a string.
+    
+    :s: string to make printable
 
-    # the translate method on str removes characters
-    # that map to None from the string
+    :return: printable string
+    :rtype: str
+    """
+    """"""
     return s.translate(NOPRINT_TRANS_TABLE)
 
 
 @app.get("/")
 async def root():
+    """
+    Function for GET on / path of FastAPI server
+
+    :return: message if server is running
+    :rtype: dict
+    """
     return {"message": "Hi there, your FastAPI server is online!"}
 
 @app.post("/telegram")
-async def webhook(req: Request):
+async def telegram_webhook(req: Request):
+    """
+    Function for POST on /telegram path of FastAPI server.
+    This receive an message for telegram server, it compute a response using chagpt and produce a response on /sendMessage versus Telegram servers.
 
+    :return: payload of the incoming request
+    :rtype: dict
+    """
     try : 
         data = await req.json()
         chat_id = data['message']['chat']['id']
@@ -93,11 +126,17 @@ async def webhook(req: Request):
     return data
 
 @app.post("/conversation-report")
-async def webhook(req: Request):
+async def generate_conversation_report(req: Request):
+    """
+    Function for POST on /conversation-report path of FastAPI server.
+    This receive a chat-id parameter into the http payload, then compute and store a summary of the corresponding conversation into the database.
 
+    :return: payload of the incoming request
+    :rtype: dict
+    """
     try : 
         data = await req.json()
-        chat_id = data['ID']
+        chat_id = data['chat-id']
         generate_conversation_report(chat_id, "Assistant", "User")
     
     except Exception as e: 
