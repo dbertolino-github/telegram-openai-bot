@@ -3,8 +3,6 @@ import os
 import psycopg2
 from datetime import datetime
 
-
-
 class PostgreSQLClient:
 
     def __init__(self,POSTGRES_HOST, POSTGRES_DB, POSTGRES_USERNAME, POSTGRES_PASSWORD, POSTGRES_PORT, POSTGRES_TABLE_CONVERSATIONS, POSTGRES_TABLE_REPORTS):
