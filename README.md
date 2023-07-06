@@ -1,3 +1,5 @@
+[![](https://img.shields.io/badge/dev-doc-green)](https://dbertolino-github.github.io/telegram-openai-bot/)
+
 ## Build and Run all services
 ```
 # Create .env file and populate manually missing information, e.g tokens for telegram and OpenAI communications
@@ -27,6 +29,8 @@ psw --> s3cr3t
 
 ## Docs
 Visit http://localhost:9001 to have a local view of Sphinx documentation after waking up docker compose services.
+To re-generate the github page containing docs, simply regenerate it locally and merge your branch into main, a github actions will replace the content online.
+
 If you have already generated teh Docs and want to re-create it, follow these steps:
 ```
 # to clean
