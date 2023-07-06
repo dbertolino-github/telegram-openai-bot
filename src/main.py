@@ -9,6 +9,13 @@ from chatgpt.ChatGptManager import ChatGptManager
 TOKEN = os.environ["TELEGRAM_TOKEN"]
 BASE_URL_TELEGRAM = f"https://api.telegram.org/bot{TOKEN}"
 OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
+POSTGRES_HOST = os.getenv("POSTGRES_HOST","")
+POSTGRES_DB = os.getenv("POSTGRES_DB","")
+POSTGRES_TABLE_CONVERSATIONS =  os.getenv("POSTGRES_TABLE_CONVERSATIONS","")
+POSTGRES_TABLE_REPORTS = os.getenv("POSTGRES_TABLE_REPORTS","")
+POSTGRES_USERNAME = os.getenv("POSTGRES_USERNAME","")
+POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD","")
+POSTGRES_PORT = os.getenv("POSTGRES_PORT","")
 # build a table mapping all non-printable characters to None
 NOPRINT_TRANS_TABLE = {
     i: None for i in range(0, sys.maxunicode + 1) if not chr(i).isprintable()
@@ -17,7 +24,7 @@ NOPRINT_TRANS_TABLE = {
 # Init clients for external communications
 chatgpt_manager = ChatGptManager(OPENAI_API_KEY)
 rest_client = httpx.AsyncClient()
-db_client = PostgreSQLClient()
+db_client = PostgreSQLClient(POSTGRES_HOST,POSTGRES_DB,POSTGRES_USERNAME,POSTGRES_PASSWORD,POSTGRES_PORT,POSTGRES_TABLE_CONVERSATIONS,POSTGRES_TABLE_REPORTS)
 app = FastAPI()
 
 # Server Utils Functions

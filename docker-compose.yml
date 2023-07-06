@@ -1,0 +1,72 @@
+version: '3.7'
+networks: 
+  application: 
+    driver: bridge
+
+volumes:
+  openai-bot-database-data:
+    driver: local
+    name: openai-bot-database-data
+  openai-bot-pgadmin-data:
+    driver: local
+    name: openai-bot-pgadmin-data
+  
+services:
+
+  ## FastAPI serve to host the bot #########################
+  openai-bot-fastapi:
+    restart: unless-stopped
+    container_name: openai-bot-fast-api
+    image: openai-bot-fast-api
+    build:
+      context: ./src/
+      dockerfile: ./Dockerfile
+    ports:
+      - 8085:80
+    environment:
+      TELEGRAM_TOKEN: ${TELEGRAM_TOKEN}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_TABLE_CONVERSATIONS: ${POSTGRES_TABLE_CONVERSATIONS}
+      POSTGRES_TABLE_REPORTS: ${POSTGRES_TABLE_REPORTS}
+      POSTGRES_USERNAME: ${POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+    volumes:
+      - ./src:/src
+    networks:
+      - application
+    # command: bash -c "sleep 5s && uvicorn main:app --host 0.0.0.0 --port 80"
+
+
+  ## Database ##############################################
+  openai-bot-database:
+    image: postgres:13.2
+    volumes:
+    - openai-bot-database-data:/var/lib/postgresql/data/
+    environment:
+        POSTGRES_USER: "admin"
+        POSTGRES_PASSWORD: "s3cr3t"
+        POSTGRES_DB: "default"
+    container_name: openai-bot-database
+    networks:
+      - application
+  
+  ## PGADMIN ###############################################
+  openai-bot-pgadmin:
+    image: dpage/pgadmin4
+    container_name: openai-bot-pgadmin
+    restart: always
+    ports:
+      - "8050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@mail.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    networks:
+      - application
+    volumes:
+    - openai-bot-pgadmin-data:/var/lib/pgadmin
+
+
+

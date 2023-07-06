@@ -3,17 +3,11 @@ import os
 import psycopg2
 from datetime import datetime
 
-POSTGRES_HOST = os.getenv("POSTGRES_HOST","")
-POSTGRES_DB = os.getenv("POSTGRES_DB","")
-POSTGRES_TABLE_CONVERSATIONS =  os.getenv("POSTGRES_TABLE_CONVERSATIONS","")
-POSTGRES_TABLE_REPORTS = os.getenv("POSTGRES_TABLE_REPORTS","")
-POSTGRES_USERNAME = os.getenv("POSTGRES_USERNAME","")
-POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD","")
-POSTGRES_PORT = os.getenv("POSTGRES_PORT","")
+
 
 class PostgreSQLClient:
 
-    def __init__(self):
+    def __init__(self,POSTGRES_HOST, POSTGRES_DB, POSTGRES_USERNAME, POSTGRES_PASSWORD, POSTGRES_PORT, POSTGRES_TABLE_CONVERSATIONS, POSTGRES_TABLE_REPORTS):
         
         self.client = psycopg2.connect(
                     dbname=POSTGRES_DB,
@@ -23,12 +17,12 @@ class PostgreSQLClient:
                     port=POSTGRES_PORT
                 )
         
-        self._init_db()
+        self._init_db(POSTGRES_TABLE_CONVERSATIONS, POSTGRES_TABLE_REPORTS)
 
         print('CLIENT POSTGRES READY')
 
     
-    def _init_db(self):
+    def _init_db(self, POSTGRES_TABLE_CONVERSATIONS, POSTGRES_TABLE_REPORTS):
         """
         This method creates two tables for the persistance of telegram bot data
         TODO: This operation should be made by a migration system
@@ -43,8 +37,9 @@ class PostgreSQLClient:
                 chat_id VARCHAR NOT NULL,
                 content VARCHAR,
                 role VARCHAR,
-                created_at TIMESTAMP DEFAULT NOW();
-            f"""
+                created_at TIMESTAMP DEFAULT NOW()
+                );
+            """
         
         query_reports = f"""
             CREATE TABLE IF NOT EXISTS {POSTGRES_TABLE_REPORTS} (
@@ -52,8 +47,9 @@ class PostgreSQLClient:
                 chat_id VARCHAR NOT NULL,
                 content VARCHAR,
                 severity VARCHAR,
-                created_at TIMESTAMP DEFAULT NOW();
-            f"""
+                created_at TIMESTAMP DEFAULT NOW()
+                );
+            """
         
         # Creating a cursor object
         cursor = self.client.cursor()
