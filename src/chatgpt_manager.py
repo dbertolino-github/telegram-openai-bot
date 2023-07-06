@@ -1,5 +1,5 @@
 import openai
-import chatgpt.Contants as Contants
+import constants as constants
 
 class ChatGptManager():
 
@@ -47,7 +47,7 @@ class ChatGptManager():
         :rtype: str
         """
         final_conversation = ' '.join(conversation)
-        augmented_prompt = Contants.SUMMARY_PROMPT.format(final_conversation)
+        augmented_prompt = constants.SUMMARY_PROMPT.format(final_conversation)
         summary = None
        
         try:
@@ -101,7 +101,7 @@ class ChatGptManager():
             ]
         :rtype: list
         """
-        message = Contants.INIT_CHATBOT_PROMPT.format(name)
+        message = constants.INIT_CHATBOT_PROMPT.format(name)
         messages=[{"role": "system", "content": message}]
         return messages
 
