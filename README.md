@@ -1,4 +1,4 @@
-## Build and Run
+## Build and Run all services
 ```
 # Create .env file and populate manually missing information, e.g tokens for telegram and OpenAI communications
 cp .env.example .env 
